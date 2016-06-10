@@ -11,7 +11,9 @@ import java.util.Objects;
  * Created by andre on 5/6/16.
  */
 @Entity
-public class Person implements Model<Long>, Comparable<Person>{
+public class Person implements Serializable, Model<Long>, Comparable<Person>{
+
+    private static final long serialVersionUID = -7385814173293751692L;
 
     @Id
     @GeneratedValue

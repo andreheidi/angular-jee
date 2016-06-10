@@ -3,7 +3,9 @@ package me.moriya.repository;
 import me.moriya.entity.Model;
 import org.slf4j.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -18,7 +20,10 @@ import java.util.List;
 /**
  * Created by andre on 6/4/16.
  */
-public class Repository<T extends Model<ID>, ID extends Serializable> implements GenericRepository<T, ID>{
+@Named
+public class Repository<T extends Model<ID>, ID extends Serializable> implements GenericRepository<T, ID>, Serializable {
+
+    private static final long serialVersionUID = 6061557471222285756L;
 
     private Class<T> entity;
 
@@ -28,7 +33,7 @@ public class Repository<T extends Model<ID>, ID extends Serializable> implements
     @PersistenceContext
     private EntityManager entityManager;
 
-    protected Repository() {
+    public Repository() {
         Class<?> clazz = this.getClass();
         do {
             if (clazz.getSuperclass().equals(Repository.class)) {
@@ -37,7 +42,6 @@ public class Repository<T extends Model<ID>, ID extends Serializable> implements
         } while ((clazz = clazz.getSuperclass()) != null);
 
         this.entity = (Class<T>) ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0];
-        log.info("Successfully initialized repository");
     }
 
     public Repository(Class<T> entity) {
@@ -71,4 +75,5 @@ public class Repository<T extends Model<ID>, ID extends Serializable> implements
     public void delete(T entity) {
         this.entityManager.remove(entity);
     }
+
 }
